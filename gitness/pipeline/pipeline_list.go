@@ -2,6 +2,7 @@ package pipeline
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"net/url"
 	"os"
@@ -39,7 +40,7 @@ func pipelineList(ctx *cli.Context) error {
 	safe_repo_ref := url.QueryEscape(ctx.String("repo-ref"))
 	body, err := internal.HttpRequest(ctx, base_url+"api/v1/repos/"+safe_repo_ref+"/pipelines")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to list pipelines for '%s': %w", ctx.String("repo-ref"), err)
 	}
 
 	tmpl, err := template.New("_").Parse(ctx.String("format") + "\n")
