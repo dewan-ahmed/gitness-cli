@@ -7,6 +7,7 @@ var Command = cli.Command{
 	Name:  "pipeline",
 	Usage: "manage pipeline",
 	Subcommands: []*cli.Command{
+		pipelineExecutionsCmd,
 		pipelineListCmd,
 	},
 }
