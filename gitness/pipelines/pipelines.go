@@ -1,12 +1,12 @@
-package pipeline
+package pipelines
 
 import "github.com/urfave/cli/v2"
 
 // Command exports the pipeline command.
 var Command = cli.Command{
-	Name:  "pipeline",
-	Usage: "manage pipeline",
+	Name:  "pipelines",
+	Usage: "manage pipelines",
 	Subcommands: []*cli.Command{
-		pipelineListCmd,
+		pipelinesListCmd,
 	},
 }

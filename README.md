@@ -16,5 +16,5 @@ export GITNESS_TOKEN=eyJhbGciOiJIUzI1NiIsInR5...
 
 Example command
 ```
-./gitness-cli pipeline ls --repo-ref project/repo
+./gitness-cli pipelines list --repo-ref project/repo
 ```
