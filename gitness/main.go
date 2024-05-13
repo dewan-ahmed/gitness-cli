@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/dewan-ahmed/gitness-cli/gitness/pipeline"
+	"github.com/dewan-ahmed/gitness-cli/gitness/pipelines"
 
 	"github.com/urfave/cli/v2"
 )
@@ -30,6 +31,7 @@ func main() {
 	}
 	app.Commands = []*cli.Command{
 		&pipeline.Command,
+		&pipelines.Command,
 	}
 
 	if err := app.Run(os.Args); err != nil {
