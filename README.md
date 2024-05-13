@@ -14,7 +14,9 @@ Set token
 export GITNESS_TOKEN=eyJhbGciOiJIUzI1NiIsInR5...
 ```
 
-Example command
+Example commands
 ```
 ./gitness-cli pipelines list --repo-ref project/repo
+./gitness-cli pipeline list --repo-ref project/repo --pipeline-id example
+./gitness-cli pipeline executions --repo-ref project/repo --pipeline-id example --format "Number: {{ .Number }} Event: {{ .Event }}"
 ```
