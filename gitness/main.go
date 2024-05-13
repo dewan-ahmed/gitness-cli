@@ -9,6 +9,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// The code defines a CLI application using the urfave/cli package.
+// It sets up flags for token and URL, assigns default values, and includes a command for pipelines.
+// The application runs with error handling for any issues that may arise.
 func main() {
 	app := &cli.App{
 		Flags: []cli.Flag{

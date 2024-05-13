@@ -32,6 +32,8 @@ var pipelineListCmd = &cli.Command{
 	},
 }
 
+// The code defines a function to list pipelines by making an HTTP request to a specified URL and parsing the response JSON data.
+// It then uses a template to format and display the pipeline information to the standard output.
 func pipelineList(ctx *cli.Context) error {
 	base_url := ctx.String("url")
 	safe_repo_ref := url.QueryEscape(ctx.String("repo-ref"))
