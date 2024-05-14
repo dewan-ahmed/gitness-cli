@@ -9,5 +9,6 @@ var Command = cli.Command{
 	Subcommands: []*cli.Command{
 		pipelineExecutionsCmd,
 		pipelineListCmd,
+		pipelineTriggersCmd,
 	},
 }
