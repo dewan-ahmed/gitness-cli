@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/urfave/cli/v2"
@@ -40,6 +41,8 @@ type ProjectCreateRequest struct {
 
 func projectsCreate(ctx *cli.Context) error {
 	baseURL := ctx.String("url")
+	token := os.Getenv("GITNESS_TOKEN") // Retrieve the authentication token from environment variable
+
 	projectName := ctx.Args().First()
 	if projectName == "" {
 		return fmt.Errorf("missing PROJECTNAME argument")
@@ -59,9 +62,17 @@ func projectsCreate(ctx *cli.Context) error {
 		return fmt.Errorf("failed to marshal project data: %w", err)
 	}
 
-	resp, err := http.Post(baseURL+"api/v1/spaces", "application/json", strings.NewReader(string(reqBody)))
+	req, err := http.NewRequest("POST", baseURL+"api/v1/spaces", strings.NewReader(string(reqBody)))
 	if err != nil {
-		return fmt.Errorf("failed to create project: %w", err)
+		return fmt.Errorf("failed to create HTTP request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token) // Set the Authorization header with the token
+
+	client := http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to send HTTP request: %w", err)
 	}
 	defer resp.Body.Close()
 
