@@ -4,15 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/dewan-ahmed/gitness-cli/gitness/docker"
 	"github.com/dewan-ahmed/gitness-cli/gitness/pipeline"
 	"github.com/dewan-ahmed/gitness-cli/gitness/pipelines"
-
 	"github.com/urfave/cli/v2"
 )
 
-// The code defines a CLI application using the urfave/cli package.
-// It sets up flags for token and URL, assigns default values, and includes a command for pipelines.
-// The application runs with error handling for any issues that may arise.
 func main() {
 	app := &cli.App{
 		Flags: []cli.Flag{
@@ -28,14 +25,25 @@ func main() {
 				Value:   "http://localhost:3000/",
 			},
 		},
-	}
-	app.Commands = []*cli.Command{
-		&pipeline.Command,
-		&pipelines.Command,
+		Commands: []*cli.Command{
+			{
+				Name:  "start",
+				Usage: "Start Gitness Docker container",
+				Action: func(c *cli.Context) error {
+					if err := docker.StartGitness(); err != nil {
+						return err
+					}
+					fmt.Println("🚀 Gitness started successfully!")
+					return nil
+				},
+			},
+			&pipeline.Command,
+			&pipelines.Command,
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		os.Exit(1)
 	}
 }
