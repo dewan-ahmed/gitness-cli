@@ -29,7 +29,7 @@ type Project struct {
 func projectsList(ctx *cli.Context) error {
 	baseURL := ctx.String("url")
 	safeProjectName := url.QueryEscape(ctx.Args().First())
-	body, err := internal.HttpRequest(ctx, baseURL+"api/v1/spaces/"+safeProjectName)
+	body, err := internal.HttpGetRequest(ctx, baseURL+"api/v1/spaces/"+safeProjectName)
 	if err != nil {
 		return fmt.Errorf("failed to list projects: %w", err)
 	}

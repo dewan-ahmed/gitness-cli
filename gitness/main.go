@@ -6,7 +6,6 @@ import (
 
 	"github.com/dewan-ahmed/gitness-cli/gitness/docker"
 	"github.com/dewan-ahmed/gitness-cli/gitness/pipeline"
-	"github.com/dewan-ahmed/gitness-cli/gitness/pipelines"
 	"github.com/dewan-ahmed/gitness-cli/gitness/projects"
 	"github.com/urfave/cli/v2"
 )
@@ -39,7 +38,6 @@ func main() {
 				},
 			},
 			&pipeline.Command,
-			&pipelines.Command,
 			&projects.Command,
 		},
 	}

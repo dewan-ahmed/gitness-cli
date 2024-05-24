@@ -16,7 +16,7 @@ import (
 var pipelineListCmd = &cli.Command{
 	Name:      "list",
 	Usage:     "list pipelines",
-	ArgsUsage: " ",
+	ArgsUsage: "<pipeline id>",
 	Action:    pipelineList,
 	Flags: []cli.Flag{
 		&cli.StringFlag{
@@ -30,22 +30,25 @@ var pipelineListCmd = &cli.Command{
 			Required:    true,
 			DefaultText: "project/repo",
 		},
-		&cli.StringFlag{
-			Name:        "pipeline-id",
-			Usage:       "pipeline id",
-			Required:    true,
-			DefaultText: "default",
-		},
 	},
 }
 
 func pipelineList(ctx *cli.Context) error {
 	base_url := ctx.String("url")
 	safe_repo_ref := url.QueryEscape(ctx.String("repo-ref"))
-	safe_pipeline_id := url.QueryEscape(ctx.String("pipeline-id"))
-	body, err := internal.HttpRequest(ctx, base_url+"api/v1/repos/"+safe_repo_ref+"/pipelines/"+safe_pipeline_id)
+	pipeline_id := ctx.Args().First()
+	var api_path string
+	if pipeline_id != "" {
+		safe_pipeline_id := url.QueryEscape(pipeline_id)
+		api_path = "api/v1/repos/" + safe_repo_ref + "/pipelines/" + safe_pipeline_id
+	} else {
+		api_path = "api/v1/repos/" + safe_repo_ref + "/pipelines"
+	}
+
+	body, err := internal.HttpGetRequest(ctx, base_url+api_path)
+
 	if err != nil {
-		return fmt.Errorf("failed for pipeline '%s': %w", ctx.String("pipeline-id"), err)
+		return fmt.Errorf("request failed: %w", err)
 	}
 
 	tmpl, err := template.New("_").Parse(ctx.String("format") + "\n")
@@ -54,9 +57,17 @@ func pipelineList(ctx *cli.Context) error {
 	}
 
 	var pipeline types.Pipeline
-	json.Unmarshal(body, &pipeline)
+	var pipelines []types.Pipeline
 
-	tmpl.Execute(os.Stdout, pipeline)
+	if pipeline_id != "" {
+		json.Unmarshal(body, &pipeline)
+		tmpl.Execute(os.Stdout, pipeline)
+	} else {
+		json.Unmarshal(body, &pipelines)
+		for _, pipeline := range pipelines {
+			tmpl.Execute(os.Stdout, pipeline)
+		}
+	}
 
 	return nil
 }

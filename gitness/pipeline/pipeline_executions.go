@@ -43,7 +43,7 @@ func pipelineExecutions(ctx *cli.Context) error {
 	base_url := ctx.String("url")
 	safe_repo_ref := url.QueryEscape(ctx.String("repo-ref"))
 	safe_pipeline_id := url.QueryEscape(ctx.String("pipeline-id"))
-	body, err := internal.HttpRequest(ctx, base_url+"api/v1/repos/"+safe_repo_ref+"/pipelines/"+safe_pipeline_id+"/executions")
+	body, err := internal.HttpGetRequest(ctx, base_url+"api/v1/repos/"+safe_repo_ref+"/pipelines/"+safe_pipeline_id+"/executions")
 	if err != nil {
 		return fmt.Errorf("failed for pipeline '%s': %w", ctx.String("pipeline-id"), err)
 	}
