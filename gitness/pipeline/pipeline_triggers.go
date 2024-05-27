@@ -13,11 +13,11 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var pipelineTriggersCmd = &cli.Command{
-	Name:      "triggers",
+var pipelineTriggerCmd = &cli.Command{
+	Name:      "trigger",
 	Usage:     "list pipeline triggers",
 	ArgsUsage: " ",
-	Action:    pipelineTriggers,
+	Action:    pipelineTrigger,
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:  "format",
@@ -39,11 +39,11 @@ var pipelineTriggersCmd = &cli.Command{
 	},
 }
 
-func pipelineTriggers(ctx *cli.Context) error {
+func pipelineTrigger(ctx *cli.Context) error {
 	base_url := ctx.String("url")
 	safe_repo_ref := url.QueryEscape(ctx.String("repo-ref"))
 	safe_pipeline_id := url.QueryEscape(ctx.String("pipeline-id"))
-	body, err := internal.HttpRequest(ctx, base_url+"api/v1/repos/"+safe_repo_ref+"/pipelines/"+safe_pipeline_id+"/triggers")
+	body, err := internal.HttpGetRequest(ctx, base_url+"api/v1/repos/"+safe_repo_ref+"/pipelines/"+safe_pipeline_id+"/triggers")
 	if err != nil {
 		return fmt.Errorf("failed for trigger '%s': %w", ctx.String("pipeline-id"), err)
 	}
