@@ -22,7 +22,7 @@ var pipelineListCmd = &cli.Command{
 		&cli.StringFlag{
 			Name:  "format",
 			Usage: "format output",
-			Value: `{{ .ConfigPath }}`,
+			Value: `{{ .Identifier }}`,
 		},
 		&cli.StringFlag{
 			Name:        "repo-ref",
