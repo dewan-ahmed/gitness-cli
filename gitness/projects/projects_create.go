@@ -7,19 +7,27 @@ package projects
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
+	"html/template"
 	"os"
-	"strings"
 
+	"github.com/dewan-ahmed/gitness-cli/gitness/internal"
+
+	"github.com/harness/gitness/types"
+	"github.com/harness/gitness/types/check"
 	"github.com/urfave/cli/v2"
 )
 
 var projectsCreateCmd = &cli.Command{
 	Name:      "create",
 	Usage:     "create a project",
-	ArgsUsage: "PROJECTNAME",
+	ArgsUsage: "<project id>",
 	Action:    projectsCreate,
 	Flags: []cli.Flag{
+		&cli.StringFlag{
+			Name:  "format",
+			Usage: "format output",
+			Value: `created {{ .Identifier }}`,
+		},
 		&cli.StringFlag{
 			Name:     "description",
 			Usage:    "project description",
@@ -41,20 +49,30 @@ type ProjectCreateRequest struct {
 
 func projectsCreate(ctx *cli.Context) error {
 	baseURL := ctx.String("url")
-	token := os.Getenv("GITNESS_TOKEN") // Retrieve the authentication token from environment variable
 
-	projectName := ctx.Args().First()
-	if projectName == "" {
-		return fmt.Errorf("missing PROJECTNAME argument")
+	projectId := ctx.Args().First()
+	if projectId == "" {
+		return fmt.Errorf("project id is required")
+	}
+	err := check.SpaceIdentifierDefault(projectId, true)
+	if err != nil {
+		return err
 	}
 
 	description := ctx.String("description")
-	isPublic := ctx.Bool("public")
+	err = check.Description(description)
+	if err != nil {
+		return err
+	}
 
+	// TODO: why doesn't the space struct have IsPublic?
+	// https://github.com/harness/gitness/blob/main/types/space.go#L33
+	//
+	// We shouldn't have to create our own struct for a space/project
 	project := ProjectCreateRequest{
 		Description: description,
-		IsPublic:    isPublic,
-		Identifier:  projectName,
+		IsPublic:    ctx.Bool("public"),
+		Identifier:  projectId,
 	}
 
 	reqBody, err := json.Marshal(project)
@@ -62,24 +80,20 @@ func projectsCreate(ctx *cli.Context) error {
 		return fmt.Errorf("failed to marshal project data: %w", err)
 	}
 
-	req, err := http.NewRequest("POST", baseURL+"api/v1/spaces", strings.NewReader(string(reqBody)))
+	body, err := internal.HttpPostRequest(ctx, baseURL+"api/v1/spaces", reqBody)
 	if err != nil {
-		return fmt.Errorf("failed to create HTTP request: %w", err)
+		return fmt.Errorf("failed for project '%s': %w", projectId, err)
 	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+token) // Set the Authorization header with the token
 
-	client := http.Client{}
-	resp, err := client.Do(req)
+	tmpl, err := template.New("_").Parse(ctx.String("format") + "\n")
 	if err != nil {
-		return fmt.Errorf("failed to send HTTP request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusCreated {
-		return fmt.Errorf("failed to create project: %s", resp.Status)
+		return err
 	}
 
-	fmt.Println("Project created successfully")
+	var space types.Space
+	json.Unmarshal(body, &space)
+
+	tmpl.Execute(os.Stdout, space)
+
 	return nil
 }
