@@ -1,7 +1,3 @@
-// This code is not working
-// ./gitness-cli project create PROJECTNAME
-// returning
-// Error: failed to create project: 401 Unauthorized
 package projects
 
 import (
