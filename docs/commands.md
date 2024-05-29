@@ -75,6 +75,28 @@ Delete an existing Gitness project including all the resources (repositories, pi
 ./gitness-cli project delete myProject
 ```
 
+## repo
+
+### import 
+
+Import a repository from another SCM to a Gitness project.
+
+```bash
+./gitness-cli repo import --project-id <projectName> --uid <repoName> <sourceRepo>
+```
+
+**Example**
+
+```bash
+./gitness-cli repo import --project-id myProject --uid podinfo harness-community/podinfo
+```
+
+**Output:**
+
+```bash
+imported podinfo
+```
+
 ## pipeline
 
 ### list
@@ -91,7 +113,7 @@ List all pipelines under a specific project/repo.
 ./gitness-cli pipeline list --repo-ref myProject/myRepo
 ```
 
-Output:
+**Output:**
 
 ```
 .harness/build-deploy-pipeline.yaml
@@ -111,11 +133,10 @@ Create a new Gitness pipeline under a specific project/repo.
 **Example**
 
 ```bash
-./gitness-cli pipeline create --repo-ref myProject/myRepo  myPipeline
+./gitness-cli pipeline create --repo-ref myProject/myRepo   --config-path .harness/test.yml --default-branch master test
 ```
 
-> [!NOTE]  
-> Ensure that myPipeline.yaml already exists under the .harness directory within that repository. 
+The above command creates a new Gitness pipeline under the project `myProject` and repository `myRepo` with the name `test` and the configuration file `.harness/test.yml` and sets the default branch to `master`.
 
 ### delete
 
