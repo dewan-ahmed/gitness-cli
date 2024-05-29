@@ -20,10 +20,10 @@ jobs:
 
     - name: Build
       run: |-
-        GOOS=linux   GOARCH=amd64 go build -o release/linux/amd64/gitness-cli
-        GOOS=linux   GOARCH=arm64 go build -o release/linux/arm64/gitness-cli
-        GOOS=darwin  GOARCH=amd64 go build -o release/darwin/amd64/gitness-cli
-        GOOS=darwin  GOARCH=arm64 go build -o release/darwin/arm64/gitness-cli
+        GOOS=linux   GOARCH=amd64 go build -o release/linux/amd64/gitness-cli ./gitness
+        GOOS=linux   GOARCH=arm64 go build -o release/linux/arm64/gitness-cli ./gitness
+        GOOS=darwin  GOARCH=amd64 go build -o release/darwin/amd64/gitness-cli ./gitness
+        GOOS=darwin  GOARCH=arm64 go build -o release/darwin/arm64/gitness-cli ./gitness
 
     - name: Archive
       run: |-
