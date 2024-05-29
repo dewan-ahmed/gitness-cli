@@ -19,4 +19,15 @@ jobs:
         go-version: '1.21'
 
     - name: Build
-      run: go build -o gitness-cli ./gitness
+      run: |-
+        GOOS=linux   GOARCH=amd64 -o release/linux/amd64/gitness-cli
+        GOOS=linux   GOARCH=arm64 -o release/linux/arm64/gitness-cli
+        GOOS=darwin  GOARCH=amd64 -o release/darwin/amd64/gitness-cli
+        GOOS=darwin  GOARCH=arm64 -o release/darwin/arm64/gitness-cli
+
+    - name: Archive
+      run: |-
+        tar -cvzf release/gitness-cli-linux-amd64.tar.gz   -C release/linux/amd64   gitness-cli
+        tar -cvzf release/gitness-cli-linux-arm64.tar.gz   -C release/linux/arm64   gitness-cli
+        tar -cvzf release/gitness-cli-darwin-amd64.tar.gz  -C release/darwin/amd64  gitness-cli
+        tar -cvzf release/gitness-cli-darwin-arm64.tar.gz  -C release/darwin/arm64  gitness-cli
