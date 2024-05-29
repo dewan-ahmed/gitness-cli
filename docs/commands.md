@@ -35,13 +35,13 @@ List details of a specific project.
 **Example**
 
 ```bash
-./gitness-cli project ls devdays
+./gitness-cli project ls myProject
 ```
 
 Output:
 
 ```
-Project ID: devdays
+Project ID: myProject
 Project Description: Gitness is awesome
 Project Visibility: private
 Project Created: 2024-05-22 15:12:38
@@ -73,6 +73,105 @@ Delete an existing Gitness project including all the resources (repositories, pi
 
 ```bash
 ./gitness-cli project delete myProject
+```
+
+## pipeline
+
+### list
+
+List all pipelines under a specific project/repo.
+
+```bash
+./gitness-cli pipeline list --repo-ref <projectName>/<repoName>
+```
+
+**Example**
+
+```bash
+./gitness-cli pipeline list --repo-ref myProject/myRepo
+```
+
+Output:
+
+```
+.harness/build-deploy-pipeline.yaml
+.harness/hello-pipeline.yaml
+.harness/volume-pipeline.yaml
+.harness/webhook-pipeline.yaml
+```
+
+### create
+
+Create a new Gitness pipeline under a specific project/repo.
+
+```bash
+./gitness-cli pipeline create --repo-ref <projectName>/<repoName> <pipelineName>
+```
+
+**Example**
+
+```bash
+./gitness-cli pipeline create --repo-ref myProject/myRepo  myPipeline
+```
+
+> [!NOTE]  
+> Ensure that myPipeline.yaml already exists under the .harness directory within that repository. 
+
+### delete
+
+Delete an existing Gitness pipeline under a specific project/repo.
+
+```bash
+./gitness-cli pipeline delete --repo-ref <projectName>/<repoName> --pipeline-id <pipelineName>
+```
+
+**Example**
+
+```bash
+./gitness-cli pipeline delete --repo-ref myProject/myRepo --pipeline-id myPipeline
+```
+
+### executions
+
+List all the executions of a specific pipeline under a specific project/repo.
+
+```bash
+./gitness-cli pipeline executions --repo-ref <projectName>/<repoName> --pipeline-id <pipelineName>
+```
+
+**Example**
+
+```bash
+./gitness-cli pipeline executions --repo-ref myProject/myRepo --pipeline-id myPipeline
+```
+
+Output:
+
+```bash
+3
+2
+1
+```
+
+### trigger
+
+List all the triggers of a specific pipeline under a specific project/repo.
+
+```bash
+./gitness-cli pipeline trigger --repo-ref <projectName>/<repoName> --pipeline-id <pipelineName>
+```
+
+**Example**
+
+```bash
+./gitness-cli pipeline trigger --repo-ref myProject/myRepo --pipeline-id myPipeline
+```
+
+Output:
+
+```bash
+default
+trigger_on_pr
 ```
 
 ## help, h
