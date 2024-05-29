@@ -1,0 +1,9 @@
+site_name: Gitness CLI Docs
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Commands: commands.md
+
+theme:
+  name: terminal
