@@ -1,6 +1,26 @@
 # gitness-cli
 A CLI to work with Gitness
 
+## Install on Mac
+
+Intel CPU
+
+```sh
+curl -L https://github.com/dewan-ahmed/gitness-cli/releases/latest/download/gitness-cli-darwin-amd64.tar.gz | tar zx
+```
+
+Apple silicon CPU
+
+```sh
+curl -L https://github.com/dewan-ahmed/gitness-cli/releases/latest/download/gitness-cli-darwin-arm64.tar.gz | tar zx
+```
+
+Verify
+
+```sh
+./gitness-cli --help
+```
+
 ## Build
 
 ```
