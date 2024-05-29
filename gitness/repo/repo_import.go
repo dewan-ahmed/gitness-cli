@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 	"text/template"
 
 	"github.com/dewan-ahmed/gitness-cli/gitness/internal"
@@ -38,7 +39,7 @@ var repoImportCmd = &cli.Command{
 		&cli.StringFlag{
 			Name:     "uid",
 			Usage:    "unique id",
-			Required: true,
+			Required: false,
 		},
 	},
 }
@@ -62,6 +63,10 @@ func repoImport(ctx *cli.Context) error {
 		Provider: importer.Provider{
 			Type: "github",
 		},
+	}
+
+	if importReq.UID == "" {
+		importReq.UID = strings.Split(provider_repo, "/")[1]
 	}
 
 	reqBody, err := json.Marshal(importReq)
